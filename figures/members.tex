@@ -1,0 +1,19 @@
+% Composition of the 26 vote members of submission 1 (Sec. 3.2 of the paper).
+\begin{tikzpicture}[x=\dimexpr\linewidth/26-0.2pt\relax]
+  \def\h{0.6}
+  \fill[accent]       (0,0)  rectangle (3,\h);
+  \fill[accent!50]    (3,0)  rectangle (13,\h);
+  \fill[black!35]     (13,0) rectangle (23,\h);
+  \fill[black!65]     (23,0) rectangle (26,\h);
+  \foreach \a/\b/\n in {0/3/3, 3/13/10, 13/23/10, 23/26/3}{
+    \node[font=\footnotesize\bfseries, white] at ({(\a+\b)/2},\h/2) {\n};
+    \draw[white, line width=1.2pt] (\a,0) -- (\a,\h);
+  }
+  % legend in two rows
+  \begin{scope}[every node/.style={font=\scriptsize, anchor=west, inner sep=1pt}]
+    \fill[accent]       (0,-0.35)  rectangle ++(0.7,-0.28); \node at (0.9,-0.49)  {anchor-recipe seeds};
+    \fill[accent!50]    (13,-0.35) rectangle ++(0.7,-0.28); \node at (13.9,-0.49) {recipe variants};
+    \fill[black!35]     (0,-0.8)   rectangle ++(0.7,-0.28); \node at (0.9,-0.94)  {fold models (5-fold)};
+    \fill[black!65]     (13,-0.8)  rectangle ++(0.7,-0.28); \node at (13.9,-0.94) {evidence-first fold models};
+  \end{scope}
+\end{tikzpicture}

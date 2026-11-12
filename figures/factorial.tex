@@ -1,0 +1,25 @@
+% Pre-specified oracle factorial (Fig. 3 of the paper), redrawn.
+\begin{tikzpicture}
+  \begin{axis}[
+      width=0.86\linewidth, height=2.8cm, scale only axis,
+      ybar=2pt, bar width=15pt,
+      ymin=0, ymax=122, ytick={0,20,...,100},
+      symbolic x coords={Tail,Head}, xtick=data,
+      xticklabels={{Tail: rare structures (n = 543)},{Head: frequent structures (n = 1182)}},
+      enlarge x limits=0.35,
+      ylabel={strict accuracy (\%)},
+      ylabel style={font=\footnotesize},
+      tick label style={font=\footnotesize},
+      axis x line*=bottom, axis y line*=left,
+      ymajorgrids, grid style={black!12},
+      nodes near coords, nodes near coords style={font=\scriptsize, rotate=90, anchor=west, color=ink, /pgf/number format/fixed, /pgf/number format/precision=1},
+      legend style={font=\footnotesize, draw=none, fill=none, at={(0.5,1.03)}, anchor=south, legend columns=4},
+      legend image code/.code={\draw[#1, draw=none] (0cm,-0.1cm) rectangle (0.3cm,0.12cm);},
+    ]
+    \addplot[fill=black!18, draw=none]   coordinates {(Tail,57.09) (Head,82.83)};
+    \addplot[fill=black!38, draw=none]   coordinates {(Tail,70.35) (Head,85.11)};
+    \addplot[fill=black!62, draw=none] coordinates {(Tail,70.53) (Head,95.18)};
+    \addplot[fill=hustred, draw=none]    coordinates {(Tail,85.08) (Head,96.28)};
+    \legend{no oracle, gold structure, gold inventory, both}
+  \end{axis}
+\end{tikzpicture}

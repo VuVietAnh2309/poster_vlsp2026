@@ -1,0 +1,20 @@
+% Train/inference mismatch of the image policy (Sec. 7 of the paper).
+\begin{tikzpicture}
+  \begin{axis}[
+      width=0.45\linewidth, height=3.1cm, scale only axis,
+      xbar, bar width=10pt, bar shift=0pt,
+      xmin=0, xmax=38,
+      ytick={1,...,4}, y dir=reverse,
+      yticklabels={{training prompts (as trained)},{inference: train questions},{inference: public test},{inference: private test}},
+      yticklabel style={font=\footnotesize, align=right},
+      enlarge y limits=0.18,
+      xlabel={\% of prompts with more than 3 images},
+      xlabel style={font=\footnotesize},
+      tick label style={font=\footnotesize},
+      axis x line*=bottom, axis y line*=left,
+      nodes near coords, nodes near coords style={font=\scriptsize\bfseries, /pgf/number format/fixed, /pgf/number format/precision=1},
+    ]
+    \addplot[fill=accent, draw=none] coordinates {(0.7,1)};
+    \addplot[fill=black!45, draw=none] coordinates {(26.1,2) (30.5,3) (12.6,4)};
+  \end{axis}
+\end{tikzpicture}

@@ -1,0 +1,53 @@
+% Finding 1: three different writers vs. one writer's self-consistency (OOF, Sec. 6.2).
+\begin{tikzpicture}
+  \begin{axis}[
+      width=0.62\linewidth, height=2.6cm, scale only axis,
+      xmin=0, xmax=3.6,
+      ymin=0.45, ymax=3.7, y dir=reverse,
+      ytick={1,2,3},
+      yticklabels={{best single writer},{same writer, 3 passes},{same writer, 9 passes}},
+      yticklabel style={font=\footnotesize, align=right},
+      xtick={0,1,2,3},
+      xlabel={gain of the 3-writer vote (pp, 95\% CI)},
+      xlabel style={font=\footnotesize},
+      tick label style={font=\footnotesize},
+      axis x line*=bottom, axis y line*=left,
+      xmajorgrids, grid style={black!12},
+      error bars/x dir=both, error bars/x explicit,
+      error bars/error bar style={line width=1.3pt, hustred},
+      error bars/error mark options={rotate=90, mark size=3.5pt, line width=1.3pt, hustred},
+    ]
+    \addplot[only marks, mark=*, mark size=4pt, hustred] coordinates {
+      (1.7,1) += (0.8,0) -= (0.9,0)
+      (1.9,2) += (1.0,0) -= (0.9,0)
+      (1.1,3) += (0.9,0) -= (0.8,0)
+    };
+    \node[font=\footnotesize\bfseries, anchor=west, xshift=3pt] at (axis cs:2.5,1) {+1.7};
+    \node[font=\footnotesize\bfseries, anchor=west, xshift=3pt] at (axis cs:2.9,2) {+1.9};
+    \node[font=\footnotesize\bfseries, anchor=west, xshift=3pt] at (axis cs:2.0,3) {+1.1};
+  \end{axis}
+\end{tikzpicture}
+
+\vspace{3mm}
+\begin{tikzpicture}
+  \begin{axis}[
+      width=0.62\linewidth, height=1.6cm, scale only axis,
+      xbar=1.5pt, bar width=9pt,
+      xmin=0, xmax=100,
+      ytick={1,2}, y dir=reverse,
+      yticklabels={{$\ge$1 candidate correct},{all candidates agree}},
+      yticklabel style={font=\footnotesize, align=right},
+      ymin=0.4, ymax=2.6,
+      xlabel={\% of OOF questions},
+      xlabel style={font=\footnotesize},
+      tick label style={font=\footnotesize},
+      axis x line*=bottom, axis y line*=left,
+      nodes near coords, nodes near coords style={font=\scriptsize\bfseries, /pgf/number format/fixed, /pgf/number format/precision=1},
+      legend style={font=\scriptsize, draw=none, fill=none, at={(0.5,1.03)}, anchor=south, legend columns=2},
+      legend image code/.code={\draw[#1, draw=none] (0cm,-0.1cm) rectangle (0.3cm,0.12cm);},
+    ]
+    \addplot[fill=hustred, draw=none] coordinates {(82.3,1) (67.1,2)};
+    \addplot[fill=black!35, draw=none] coordinates {(80.8,1) (85.4,2)};
+    \legend{3 different writers\quad, 1 writer $\times$ 9 passes}
+  \end{axis}
+\end{tikzpicture}

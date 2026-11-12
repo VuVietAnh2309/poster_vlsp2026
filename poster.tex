@@ -1,0 +1,277 @@
+% !TeX program = xelatex
+% !TeX encoding = UTF-8
+% Poster: AI_TLfanclub at VLSP 2026 ViTNumChart
+% Build: latexmk -xelatex poster.tex
+\documentclass[a1paper,portrait]{baposter}
+
+\usepackage{amsmath}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setsansfont{FiraSans}[
+  Extension=.otf, UprightFont=*-Regular, BoldFont=*-Medium,
+  ItalicFont=*-Italic, BoldItalicFont=*-MediumItalic]
+\newfontfamily\lightfont{FiraSans}[Extension=.otf, UprightFont=*-Light, BoldFont=*-Regular]
+\setmonofont{FiraMono}[Extension=.otf, UprightFont=*-Regular, BoldFont=*-Medium, Scale=0.92]
+\setmathfont{FiraMath-Regular.otf}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[english]{babel}
+
+\usepackage{booktabs}
+\usepackage{paralist}
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18, every axis x label/.append style={yshift=-3pt}}
+\usetikzlibrary{arrows.meta,positioning,calc}
+
+% ---- colours: one accent, the rest neutral --------------------------------
+\definecolor{accent}{RGB}{165,28,48}     % HUST red, slightly deepened
+\definecolor{ink}{RGB}{28,30,34}
+\definecolor{muted}{RGB}{95,99,107}
+\colorlet{rulegray}{black!18}
+\colorlet{hustred}{accent}               % used by the figure files
+
+% ---- section headers: dark text over a thin accent rule -------------------
+\makeatletter
+\renewcommand{\baposter@box@headerdrawtext@rectangle}[1]{%
+  \path (\baposter@box@name nw) +(0pt,-0.55\baposter@box@@boxheaderheight)
+        node[anchor=west, inner xsep=0pt, inner ysep=0pt] {#1};%
+  \draw[accent, line width=1.6pt] (\baposter@box@name tnw) -- (\baposter@box@name tne);%
+}
+\makeatother
+\newcommand{\secno}[1]{\textcolor{accent}{#1}\hspace{0.55em}}
+
+% ---- helpers ------------------------------------------------------------
+\newcommand{\progfont}[1]{{\ttfamily #1}}
+\newcommand{\pp}{\,pp}
+\newcommand{\note}[1]{{\small\color{muted}#1}}
+
+% a key figure set in type: number, then a caption underneath
+\newcommand{\keyfig}[2]{%
+  {\lightfont\fontsize{24}{26}\selectfont\color{accent}#1}\\[4pt]
+  {\raggedright\footnotesize\color{ink}#2\par}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+\begin{document}
+\color{ink}
+
+\begin{poster}{
+    grid=false,
+    columns=3,
+    colspacing=1.1em,
+    headerheight=0.095\textheight,
+    eyecatcher=true,
+    background=none,
+    borderColor=white,
+    headerColorOne=white,
+    headerColorTwo=white,
+    headerFontColor=ink,
+    boxColorOne=white,
+    headershape=rectangle,
+    headershade=plain,
+    headerfont=\sffamily\bfseries\large,
+    boxheaderheight=1.95em,
+    boxpadding=0.35em,
+    textborder=none,
+    headerborder=none,
+    boxshade=none,
+    linewidth=0pt,
+  }
+  % ---- eye catcher: HUST logo ----------------------------------------------
+  {\includegraphics[height=0.075\textheight]{logos/hust_crop.jpg}}
+  % ---- title ------------------------------------------------------------------
+  {\color{ink}\fontsize{27}{32}\selectfont\bfseries
+    AI\_TLfanclub at VLSP 2026 ViTNumChart:\\[2pt]
+    {\fontsize{20}{25}\selectfont\mdseries Voting over Fine-Tuned Small Multimodal Program Writers,\\ with an Analysis of Single-Writer Errors}}
+  % ---- authors ----------------------------------------------------------------
+  {\vspace{0.4em}\large
+    Do Thanh Duc \quad Vu Viet Anh \quad Nguyen Nhat Minh\\[2pt]
+    {\normalsize\color{muted} School of Information and Communication Technology, Hanoi University of Science and Technology}\\[1pt]
+    {\small\color{muted}\ttfamily \{duc.dt242095m, anh.vv251047m, minh.nn252184m\}@sis.hust.edu.vn}}
+  % ---- right logo: VLSP 2026 -------------------------------------------------
+  {\includegraphics[height=0.078\textheight]{logos/vlsp2026.png}}
+
+%==============================================================================
+\headerbox{}{name=glance,column=0,row=0,span=3}{
+  {\color{rulegray}\rule{\linewidth}{0.8pt}}\par\vspace{1.5mm}
+  \begin{minipage}[c]{0.15\linewidth}
+    \keyfig{1st of 9}{teams on the private\\leaderboard}
+  \end{minipage}%
+  {\color{rulegray}\vrule width 0.8pt height 7mm depth 7mm}\hspace{1.2em}%
+  \begin{minipage}[c]{0.17\linewidth}
+    \keyfig{0.7917}{Program Accuracy, private test\\{\color{muted}runner-up 0.7866}}
+  \end{minipage}%
+  {\color{rulegray}\vrule width 0.8pt height 7mm depth 7mm}\hspace{1.2em}%
+  \begin{minipage}[c]{0.63\linewidth}
+    A base \textbf{Qwen3-VL-4B} transcribes every chart, \textbf{26 LoRA-tuned Qwen3.5-4B} writers each write one program, and a \textbf{plurality vote} over their canonical programs picks the answer. Every model has at most 8B parameters.\\[3pt]
+    \textcolor{accent}{\textbf{1}}\enspace Combining writers that \emph{differ} helps more than decoding one writer more often.\\[1pt]
+    \textcolor{accent}{\textbf{2}}\enspace A single writer's errors start early, are shared across writers, and resisted every training remedy we tried.
+  \end{minipage}
+  \par\vspace{1.5mm}{\color{rulegray}\rule{\linewidth}{0.8pt}}
+}
+
+\headerbox{\secno{1}Task: ViTNumChart}{name=task,column=0,below=glance}{
+  Answer a numerical question over a \textbf{Vietnamese financial report} (paragraphs, HTML tables, chart images) by writing a \textbf{reasoning program}. Arithmetic steps (\texttt{add}, \texttt{subtract}, \texttt{multiply}, \texttt{divide}, \texttt{greater}) take numbers or references \texttt{\#k}; retrieval steps \texttt{table\_op}, \texttt{chart\_op} copy labels from the document.
+
+  \vspace{3mm}
+  \input{figures/task-example}
+}
+
+\headerbox{\secno{4}System}{name=system,column=0,span=3,below=task}{
+  \vspace{2mm}
+  \begin{center}
+    \resizebox{\linewidth}{!}{\input{figures/pipeline}}
+  \end{center}
+}
+
+\headerbox{\secno{2}Data and official results}{name=results,column=1,below=glance,above=system}{
+  \begin{center}
+  \small
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+                    & Train & Public & Private \\
+    \midrule
+    Questions       & 1725  & 459    & 980 \\
+    Documents       & 74    & 19     & 39 \\
+    Distinct images & 187   & 61     & 83 \\
+    Chart-step gold & 678   & 202    & -- \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \note{The public test is development data only and is never used for training.}
+
+  \begin{center}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    Submission & Public & \multicolumn{2}{c}{Private} \\
+    \cmidrule(l){3-4}
+               & strict & PA & EA \\
+    \midrule
+    1\enspace Vote, 26 writers    & 74.07 & \textbf{0.7917} & 0.8916\\
+    2\enspace + views, 32 writers\textsuperscript{*} & 74.51 & \textbf{0.7917} & \textbf{0.8933}\\
+    3\enspace Larger vote         & 74.51 & 0.79   & --\\
+    4\enspace HTML-table writer   & 73.42 & 0.7711 & --\\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \note{\textsuperscript{*}Leaderboard entry; private values as printed by the platform. EA (value) exceeds PA (program): many errors lie in the program's \emph{form}.}
+
+  \smallskip
+  \textbf{Where the vote helps} \note{(public strict \%, descriptive)}\par
+  {\centering\small
+  \begin{tabular}{@{}lrcc@{}}
+    \toprule
+    Slice & $n$ & Anchor & Vote \\
+    \midrule
+    Arithmetic only  & 182 & 76.4 & \textbf{81.3}\\
+    Chart step       & 202 & 67.8 & \textbf{70.3}\\
+    Unseen structure & 43  & 11.6 & \textbf{20.9}\\
+    \bottomrule
+  \end{tabular}\par}
+}
+
+\headerbox{\secno{3}Training the writers}{name=train,column=2,below=glance,above=system}{
+  \begin{compactitem}
+    \item Each training question becomes one chat example: the inference prompt, with the gold program as target.
+    \item \textbf{LoRA} $r{=}32$, $\alpha{=}64$ on attention, MLP and Gated DeltaNet projections; vision tower frozen.
+    \item lr $10^{-4}$, 3 epochs, bf16, prompts $\le$ 6{,}144 tokens.
+    \item Median 0.87\,h per writer on one RTX 5090.
+    \item Training prompts attach the gold images plus 1--2 distractor images; inference attaches \emph{every} image.
+    \item Five document-level folds for cross-fitting; no external data.
+  \end{compactitem}
+
+  \medskip
+  \textbf{The 26 vote members} \note{(submission 1)}\\[4pt]
+  \input{figures/members}
+
+  \note{All share backbone and prompt; they differ in target format, training folds, seed and objective, so that their \emph{errors} differ.}
+}
+
+\headerbox{\secno{6}Ablations and training remedies}{name=abl,column=1,below=system}{
+  Public set, wild cluster bootstrap-t, Holm over 23 tests.\\
+  \tikz[baseline=0pt]\fill[accent] (0,0) rectangle (6pt,6pt);\,survives Holm\qquad
+  \tikz[baseline=0pt]\fill[black!45] (3pt,3pt) circle (3pt);\,not resolved
+
+  \begin{center}\input{figures/ablations}\end{center}
+
+  \note{Zero-shot Qwen3-VL-4B scores 12.6\%, so fine-tuning is needed. Of 13 remedies (target, objective, capacity, data) none helped and two hurt; minimum detectable effect $\approx$ 4.95\pp.}
+}
+
+\headerbox{\secno{8}Where a single writer loses accuracy}{name=errhead,column=0,span=3,below=abl}{
+  \begin{minipage}[t]{0.31\linewidth}
+    \keyfig{83.8\%}{of wrong multi-step programs already leave the gold path \textbf{at step 0}\\{\color{muted}38.5\% if every step failed independently}}
+  \end{minipage}\hfill
+  {\color{rulegray}\vrule width 0.8pt height 1mm depth 13mm}\hfill
+  \begin{minipage}[t]{0.31\linewidth}
+    \keyfig{17.7\%}{of OOF questions are failed by \textbf{all three} writers\\{\color{muted}5.1\% expected if errors were independent}}
+  \end{minipage}\hfill
+  {\color{rulegray}\vrule width 0.8pt height 1mm depth 13mm}\hfill
+  \begin{minipage}[t]{0.31\linewidth}
+    \keyfig{88.1\% {\color{muted}vs.} 76.8\%}{a correct program is in the candidate pool, vs.\ chosen by the \mbox{\textbf{best gold-free selector}}}
+  \end{minipage}
+}
+
+\headerbox{\secno{5}Diverse writers vs.\ more samples}{name=div,column=0,below=system,above=errhead}{
+  Out of fold (1725 questions), a vote of \textbf{three different writers} vs.\ one writer voting over its own samples:
+
+  \begin{center}\input{figures/diversity}\end{center}
+
+  \note{Different writers agree less, but hold a correct program more often.}
+}
+
+\headerbox{\secno{7}Images help; extra images hurt}{name=img,column=2,below=system,above=errhead}{
+  \begin{compactitem}
+    \item Removing all images: \textbf{$-$23.3\pp} (public set).
+    \item Blanking chart images on 678 OOF chart questions: \textbf{$-$13.4\pp}.
+    \item Blanking images the gold program \emph{does not read}: \textbf{+1.72\pp} [0.74, 2.73] on 1047 OOF questions.
+  \end{compactitem}
+
+  \smallskip
+  A likely cause is a train/inference mismatch:
+  \begin{center}\input{figures/images}\end{center}
+  \note{\textbf{Next step:} train with the inference-time image policy.}
+}
+
+\headerbox{\secno{9}Structure and inventory oracles}{name=oracle,column=0,below=errhead,above=bottom}{
+  A pre-specified factorial on 1725 OOF questions gives the writer the gold \emph{structure} (operators and \texttt{\#k} dataflow), the gold \emph{inventory} (argument strings), or both.
+
+  \begin{center}\input{figures/factorial}\end{center}
+
+  \note{Inventory +12.70\pp, structure +5.74\pp; both together reach 92.75\%. A chance-matched control cut the inventory's lead from +8.4 to +2.8\pp.}
+}
+
+\headerbox{\secno{10}Right value, wrong form}{name=form,column=1,below=errhead,above=bottom}{
+  \textbf{161 of 435} strict OOF errors (37\%) execute to the gold value. Many reflect the Vietnamese presentation of the data: diacritic labels and \emph{triệu / tỷ} scales.
+
+  \begin{center}\input{figures/value-equal}\end{center}
+
+  \note{Picking the gold form among a writer's own samples would reach 77.62\% (from 74.78\%), yet a convention model trained to make that choice changed accuracy by $-$0.17\pp.}
+}
+
+\headerbox{\secno{11}Conclusion}{name=concl,column=2,below=errhead}{
+  \begin{compactitem}
+    \item 26 LoRA-tuned 4B writers and a 4B transcriber ranked \textbf{first} under the 8B limit.
+    \item Combining \textbf{writers that differ} beat more passes of one writer.
+    \item A single writer's errors \textbf{begin early}, are \textbf{shared}, and resisted every training remedy.
+    \item Code, adapters and data were shared with the organisers; a vote replay reproduces the submissions exactly.
+  \end{compactitem}
+}
+
+\headerbox{References}{name=refs,column=2,below=concl,above=bottom}{
+  \scriptsize\color{muted}\raggedright
+  \setlength{\parskip}{1.5pt}
+  Bai et al.\ 2025. Qwen3-VL technical report. arXiv:2511.21631.\par
+  Cameron et al.\ 2008. Bootstrap-based improvements for inference with clustered errors. \mbox{\emph{REStat}}.\par
+  Chen et al.\ 2021. FinQA: a dataset of numerical reasoning over financial data. \emph{EMNLP}.\par
+  Hu et al.\ 2022. LoRA: low-rank adaptation of large language models. \emph{ICLR}.\par
+  Kwon et al.\ 2023. PagedAttention (vLLM). \emph{SOSP}.\par
+  Qwen Team 2026. Qwen3.5: towards native multimodal agents. Model card.\par
+  Wang et al.\ 2023. Self-consistency improves chain of thought reasoning. \emph{ICLR}.\par
+  {\tiny\itshape Thanks to the VLSP consortium for data, platform and rulings. Poster examples are constructed.}
+}
+
+\end{poster}
+\end{document}

@@ -1,0 +1,44 @@
+% Constructed task example (Fig. 1 of the paper), redrawn.
+\begin{tikzpicture}[
+    panel/.style={draw=black!25, fill=white, line width=0.6pt, inner sep=5pt},
+    lab/.style={font=\scriptsize\bfseries\color{muted}, anchor=south west, inner sep=1.5pt},
+  ]
+  % ---- input chart --------------------------------------------------------
+  \node[panel, anchor=north west] (chart) at (0,0) {%
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=3.9cm, height=3.6cm, scale only axis=false,
+          ybar, bar width=13pt,
+          ymin=0, ymax=1850,
+          symbolic x coords={2023,2024}, xtick=data,
+          enlarge x limits=0.6,
+          axis lines*=left, ytick=\empty,
+          tick label style={font=\scriptsize},
+          nodes near coords, nodes near coords style={font=\scriptsize, /pgf/number format/set thousands separator={.}},
+          title={\scriptsize Doanh thu thuần (tỷ đồng)},
+          title style={yshift=-5pt},
+        ]
+        \addplot[fill=black!50, draw=none] coordinates {(2023,1310) (2024,1520)};
+      \end{axis}
+    \end{tikzpicture}};
+  \node[lab] at (chart.north west) {IMAGE 1};
+
+  % ---- question -------------------------------------------------------------
+  \path (chart.north east) ++(3mm,0) coordinate (qanchor);
+  \node[panel, anchor=north west, font=\small, minimum height=0pt,
+        text width=\dimexpr\linewidth-4.45cm\relax] (q) at (qanchor) {%
+    \textbf{Question} {\scriptsize\color{muted}(translated)}\\[1pt]
+    By how much did net revenue change from 2023 to 2024?\\[4pt]
+    {\footnotesize\color{muted}Context: report paragraphs, HTML tables, up to 13 chart images}};
+  \node[lab] at (q.north west) {INPUT};
+
+  % ---- programs -----------------------------------------------------------
+  \node[panel, anchor=north west, text width=\dimexpr\linewidth-11pt\relax, font=\footnotesize] (prog) at ([yshift=-6mm]chart.south west) {%
+    \renewcommand{\arraystretch}{1.25}%
+    \begin{tabular}{@{}l@{\hspace{6pt}}p{\dimexpr\linewidth-38pt\relax}@{}}
+      {\scriptsize\bfseries gold} & \progfont{chart\_at(Image 1; Doanh thu thuần; 2024; none); chart\_at(Image 1; Doanh thu thuần; 2023; none); subtract(\#0; \#1)}\\[2pt]
+      {\scriptsize\bfseries\color{accent}error} & \progfont{chart\_at(Image 1; \textcolor{accent}{\underline{Doanh thu}}; 2024; none); \dots}\newline{\scriptsize\color{muted}label not as printed on the chart}\\[2pt]
+      {\scriptsize\bfseries\color{accent}error} & \progfont{subtract(\textcolor{accent}{\underline{1520}}; \textcolor{accent}{\underline{1310}})}\newline{\scriptsize\color{muted}right value, but typed from the bars}\\
+    \end{tabular}};
+  \node[lab] at (prog.north west) {OUTPUT: A PROGRAM, SCORED BY PROGRAM ACCURACY (PA)};
+\end{tikzpicture}

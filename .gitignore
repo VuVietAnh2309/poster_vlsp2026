@@ -1,0 +1,25 @@
+# LaTeX build artefacts
+*.aux
+*.log
+*.out
+*.toc
+*.nav
+*.snm
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.xdv
+*.bbl
+*.blg
+*.run.xml
+*.bcf
+_minted*/
+build/
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+*~
+*.swp
