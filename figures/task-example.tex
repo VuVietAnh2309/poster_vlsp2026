@@ -36,7 +36,7 @@
   \node[panel, anchor=north west, text width=\dimexpr\linewidth-11pt\relax, font=\footnotesize] (prog) at ([yshift=-6mm]chart.south west) {%
     \renewcommand{\arraystretch}{1.25}%
     \begin{tabular}{@{}l@{\hspace{6pt}}p{\dimexpr\linewidth-38pt\relax}@{}}
-      {\scriptsize\bfseries gold} & \progfont{chart\_at(Image 1; Doanh thu thuần; 2024; none); chart\_at(Image 1; Doanh thu thuần; 2023; none); subtract(\#0; \#1)}\\[2pt]
+      {\scriptsize\bfseries gold} & \progfont{chart\_at(Image 1; \vnlabel{Doanh thu thuần}; 2024; none); chart\_at(Image 1; \vnlabel{Doanh thu thuần}; 2023; none); \mbox{subtract}(\#0; \#1)}\\[2pt]
       {\scriptsize\bfseries\color{accent}error} & \progfont{chart\_at(Image 1; \textcolor{accent}{\underline{Doanh thu}}; 2024; none); \dots}\newline{\scriptsize\color{muted}label not as printed on the chart}\\[2pt]
       {\scriptsize\bfseries\color{accent}error} & \progfont{subtract(\textcolor{accent}{\underline{1520}}; \textcolor{accent}{\underline{1310}})}\newline{\scriptsize\color{muted}right value, but typed from the bars}\\
     \end{tabular}};

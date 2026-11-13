@@ -12,7 +12,7 @@
   \node[stage, right=of pre] (prompt) {{\small\bfseries Prompt}\\[3pt]{\color{muted}text, tables, \textbf{all} images, transcripts, question last}};
   \node[key, right=of prompt] (wr) {{\small\bfseries 26 writers}\\[3pt]{\color{muted}Qwen3.5-4B + LoRA\\greedy decoding (vLLM)}};
   \node[stage, right=of wr] (post) {{\small\bfseries Post-processing}\\[3pt]{\color{muted}extract, repair, canonicalise (reads no gold)}};
-  \node[key, right=of post] (vote) {{\small\bfseries Plurality vote}\\[3pt]{\color{muted}over canonical programs; tie $\to$ anchor writer}};
+  \node[key, right=of post] (vote) {{\small\bfseries Plurality vote}\\[3pt]{\color{muted}over canonical programs; ties $\to$ anchor, else fixed order}};
   \node[stage, right=of vote] (out) {{\small\bfseries Output}\\[3pt]{\color{muted}one program per question}};
 
   \node[stage, text width=6.6cm, minimum height=1.3cm, anchor=north, fill=black!4]

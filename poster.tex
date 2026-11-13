@@ -42,6 +42,8 @@
 
 % ---- helpers ------------------------------------------------------------
 \newcommand{\progfont}[1]{{\ttfamily #1}}
+% Vietnamese labels inside programs: FiraMono lacks some precomposed glyphs (e.g. U+1EA7)
+\newcommand{\vnlabel}[1]{{\sffamily #1}}
 \newcommand{\pp}{\,pp}
 \newcommand{\note}[1]{{\small\color{muted}#1}}
 
@@ -103,7 +105,7 @@
     \keyfig{0.7917}{Program Accuracy, private test\\{\color{muted}runner-up 0.7866}}
   \end{minipage}%
   {\color{rulegray}\vrule width 0.8pt height 7mm depth 7mm}\hspace{1.2em}%
-  \begin{minipage}[c]{0.63\linewidth}
+  \begin{minipage}[c]{0.61\linewidth}
     A base \textbf{Qwen3-VL-4B} transcribes every chart, \textbf{26 LoRA-tuned Qwen3.5-4B} writers each write one program, and a \textbf{plurality vote} over their canonical programs picks the answer. Every model has at most 8B parameters.\\[3pt]
     \textcolor{accent}{\textbf{1}}\enspace Combining writers that \emph{differ} helps more than decoding one writer more often.\\[1pt]
     \textcolor{accent}{\textbf{2}}\enspace A single writer's errors start early, are shared across writers, and resisted every training remedy we tried.
@@ -157,18 +159,19 @@
     \bottomrule
   \end{tabular}
   \end{center}
-  \note{\textsuperscript{*}Leaderboard entry; private values as printed by the platform. EA (value) exceeds PA (program): many errors lie in the program's \emph{form}.}
+  \note{\textsuperscript{*}Leaderboard entry; private values as printed by the platform. EA (value) exceeds PA (program), consistent with errors in the program's \emph{form} (Box~10).}
 
   \smallskip
-  \textbf{Where the vote helps} \note{(public strict \%, descriptive)}\par
+  \textbf{Accuracy by slice} \note{(public strict \%; members chosen on this set)}\par
   {\centering\small
   \begin{tabular}{@{}lrcc@{}}
     \toprule
     Slice & $n$ & Anchor & Vote \\
     \midrule
-    Arithmetic only  & 182 & 76.4 & \textbf{81.3}\\
-    Chart step       & 202 & 67.8 & \textbf{70.3}\\
-    Unseen structure & 43  & 11.6 & \textbf{20.9}\\
+    Arithmetic only  & 182 & 76.4 & 81.3\\
+    Table step       & 75  & 66.7 & 66.7\\
+    Chart step       & 202 & 67.8 & 70.3\\
+    Unseen structure & 43  & 11.6 & 20.9\\
     \bottomrule
   \end{tabular}\par}
 }
@@ -197,7 +200,7 @@
 
   \begin{center}\input{figures/ablations}\end{center}
 
-  \note{Zero-shot Qwen3-VL-4B scores 12.6\%, so fine-tuning is needed. Of 13 remedies (target, objective, capacity, data) none helped and two hurt; minimum detectable effect $\approx$ 4.95\pp.}
+  \note{Zero-shot: 12.6\%. None of 13 remedies helped; two hurt. MDE $\approx$ 4.95\pp{} per test, 7.42\pp{} at the first Holm step.}
 }
 
 \headerbox{\secno{8}Where a single writer loses accuracy}{name=errhead,column=0,span=3,below=abl}{
@@ -206,11 +209,11 @@
   \end{minipage}\hfill
   {\color{rulegray}\vrule width 0.8pt height 1mm depth 13mm}\hfill
   \begin{minipage}[t]{0.31\linewidth}
-    \keyfig{17.7\%}{of OOF questions are failed by \textbf{all three} writers\\{\color{muted}5.1\% expected if errors were independent}}
+    \keyfig{17.7\%}{of OOF questions are failed by \textbf{all three} writers\\{\color{muted}5.1\% expected if errors were independent (post hoc; an upper bound)}}
   \end{minipage}\hfill
   {\color{rulegray}\vrule width 0.8pt height 1mm depth 13mm}\hfill
   \begin{minipage}[t]{0.31\linewidth}
-    \keyfig{88.1\% {\color{muted}vs.} 76.8\%}{a correct program is in the candidate pool, vs.\ chosen by the \mbox{\textbf{best gold-free selector}}}
+    \keyfig{88.1\% {\color{muted}vs.} 76.8\%}{a correct program is in the pool of three writers with their branches, vs.\ chosen by the \mbox{\textbf{best gold-free selector}} {\color{muted}(post hoc)}}
   \end{minipage}
 }
 
@@ -226,7 +229,7 @@
   \begin{compactitem}
     \item Removing all images: \textbf{$-$23.3\pp} (public set).
     \item Blanking chart images on 678 OOF chart questions: \textbf{$-$13.4\pp}.
-    \item Blanking images the gold program \emph{does not read}: \textbf{+1.72\pp} [0.74, 2.73] on 1047 OOF questions.
+    \item Blanking images the gold program \emph{does not read}: \textbf{+1.72\pp} [0.74, 2.73] on 1047 OOF questions {\color{muted}(images identified with the gold; not resolved on the public set)}.
   \end{compactitem}
 
   \smallskip
@@ -240,11 +243,11 @@
 
   \begin{center}\input{figures/factorial}\end{center}
 
-  \note{Inventory +12.70\pp, structure +5.74\pp; both together reach 92.75\%. A chance-matched control cut the inventory's lead from +8.4 to +2.8\pp.}
+  \note{Inventory +12.70\pp, structure +5.74\pp; both 92.75\% (upper bounds). Chance-matched control (1389 q.): lead +8.4 $\to$ +2.8\pp, inconclusive.}
 }
 
 \headerbox{\secno{10}Right value, wrong form}{name=form,column=1,below=errhead,above=bottom}{
-  \textbf{161 of 435} strict OOF errors (37\%) execute to the gold value. Many reflect the Vietnamese presentation of the data: diacritic labels and \emph{triệu / tỷ} scales.
+  \textbf{161 of 435} strict OOF errors (about a third; approximate) execute to the gold value. Many may reflect the Vietnamese presentation of the data: diacritic labels and \emph{triệu / tỷ} scales.
 
   \begin{center}\input{figures/value-equal}\end{center}
 
@@ -256,7 +259,7 @@
     \item 26 LoRA-tuned 4B writers and a 4B transcriber ranked \textbf{first} under the 8B limit.
     \item Combining \textbf{writers that differ} beat more passes of one writer.
     \item A single writer's errors \textbf{begin early}, are \textbf{shared}, and resisted every training remedy.
-    \item Code, adapters and data were shared with the organisers; a vote replay reproduces the submissions exactly.
+    \item Code, adapters and data were shared with the organisers; a vote replay reproduces the submissions exactly; a re-run with retrained adapters differs on 30 of 980.
   \end{compactitem}
 }
 
