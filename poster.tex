@@ -2,7 +2,7 @@
 % !TeX encoding = UTF-8
 % Poster: AI_TLfanclub at VLSP 2026 ViTNumChart
 % Build: latexmk -xelatex poster.tex
-\documentclass[a1paper,portrait]{baposter}
+\documentclass[a1paper,portrait,movebody=8.4mm]{baposter}
 
 \usepackage{amsmath}
 \usepackage{fontspec}
@@ -46,6 +46,7 @@
 \newcommand{\vnlabel}[1]{{\sffamily #1}}
 \newcommand{\pp}{\,pp}
 \newcommand{\note}[1]{{\small\color{muted}#1}}
+\newcommand{\notepar}[1]{{\small\color{muted}\raggedright #1\par}}
 
 % a key figure set in type: number, then a caption underneath
 \newcommand{\keyfig}[2]{%
@@ -96,7 +97,7 @@
 
 %==============================================================================
 \headerbox{}{name=glance,column=0,row=0,span=3}{
-  {\color{rulegray}\rule{\linewidth}{0.8pt}}\par\vspace{1.5mm}
+  \noindent\makebox[\linewidth][c]{\color{rulegray}\rule{\dimexpr\linewidth+0.7em\relax}{0.8pt}}\par\vspace{1.5mm}
   \begin{minipage}[c]{0.15\linewidth}
     \keyfig{1st of 9}{teams on the private\\leaderboard}
   \end{minipage}%
@@ -110,7 +111,7 @@
     \textcolor{accent}{\textbf{1}}\enspace Combining writers that \emph{differ} helps more than decoding one writer more often.\\[1pt]
     \textcolor{accent}{\textbf{2}}\enspace A single writer's errors start early, are shared across writers, and resisted every training remedy we tried.
   \end{minipage}
-  \par\vspace{1.5mm}{\color{rulegray}\rule{\linewidth}{0.8pt}}
+  \par\vspace{1.5mm}\noindent\makebox[\linewidth][c]{\color{rulegray}\rule{\dimexpr\linewidth+0.7em\relax}{0.8pt}}
 }
 
 \headerbox{\secno{1}Task: ViTNumChart}{name=task,column=0,below=glance}{
@@ -141,7 +142,7 @@
     \bottomrule
   \end{tabular}
   \end{center}
-  \note{The public test is development data only and is never used for training.}
+  \notepar{The public test is development data only and is never used for training.}
 
   \begin{center}
   \small
@@ -159,7 +160,7 @@
     \bottomrule
   \end{tabular}
   \end{center}
-  \note{\textsuperscript{*}Leaderboard entry; private values as printed by the platform. EA (value) exceeds PA (program), consistent with errors in the program's \emph{form} (Box~10).}
+  \notepar{\textsuperscript{*}Leaderboard entry; private values as printed by the platform. EA (value) exceeds PA (program), consistent with errors in the program's \emph{form} (Box~10).}
 
   \smallskip
   \textbf{Accuracy by slice} \note{(public strict \%; members chosen on this set)}\par
@@ -190,7 +191,7 @@
   \textbf{The 26 vote members} \note{(submission 1)}\\[4pt]
   \input{figures/members}
 
-  \note{All share backbone and prompt; they differ in target format, training folds, seed and objective, so that their \emph{errors} differ.}
+  \notepar{All share backbone and prompt; they differ in target format, training folds, seed and objective, so that their \emph{errors} differ.}
 }
 
 \headerbox{\secno{6}Ablations and training remedies}{name=abl,column=1,below=system}{
@@ -200,12 +201,12 @@
 
   \begin{center}\input{figures/ablations}\end{center}
 
-  \note{Zero-shot: 12.6\%. None of 13 remedies helped; two hurt. MDE $\approx$ 4.95\pp{} per test, 7.42\pp{} at the first Holm step.}
+  \notepar{Zero-shot: 12.6\%. None of 13 remedies helped; two hurt. MDE $\approx$ 4.95\pp{} per test, 7.42\pp{} at the first Holm step.}
 }
 
 \headerbox{\secno{8}Where a single writer loses accuracy}{name=errhead,column=0,span=3,below=abl}{
   \begin{minipage}[t]{0.31\linewidth}
-    \keyfig{83.8\%}{of wrong multi-step programs already leave the gold path \textbf{at step 0}\\{\color{muted}38.5\% if every step failed independently}}
+    \keyfig{83.8\%}{of wrong multi-step programs already leave the gold path \textbf{at step 0}\\{\color{muted}38.5\% under a weak null of independent step failures (post hoc)}}
   \end{minipage}\hfill
   {\color{rulegray}\vrule width 0.8pt height 1mm depth 13mm}\hfill
   \begin{minipage}[t]{0.31\linewidth}
@@ -222,20 +223,20 @@
 
   \begin{center}\input{figures/diversity}\end{center}
 
-  \note{Different writers agree less, but hold a correct program more often.}
+  \notepar{Different writers agree less, but hold a correct program more often. Comparisons with one writer's passes are post hoc.}
 }
 
 \headerbox{\secno{7}Images help; extra images hurt}{name=img,column=2,below=system,above=errhead}{
   \begin{compactitem}
     \item Removing all images: \textbf{$-$23.3\pp} (public set).
     \item Blanking chart images on 678 OOF chart questions: \textbf{$-$13.4\pp}.
-    \item Blanking images the gold program \emph{does not read}: \textbf{+1.72\pp} [0.74, 2.73] on 1047 OOF questions {\color{muted}(images identified with the gold; not resolved on the public set)}.
+    \item On 1047 OOF questions whose gold reads \emph{no} chart, blanking the images (transcripts kept): \textbf{+1.72\pp} [0.74, 2.73] {\color{muted}(uses the gold; not resolved on the public set)}.
   \end{compactitem}
 
   \smallskip
   A likely cause is a train/inference mismatch:
   \begin{center}\input{figures/images}\end{center}
-  \note{\textbf{Next step:} train with the inference-time image policy.}
+  \notepar{\textbf{Next step:} train with the inference-time image policy.}
 }
 
 \headerbox{\secno{9}Structure and inventory oracles}{name=oracle,column=0,below=errhead,above=bottom}{
@@ -243,23 +244,23 @@
 
   \begin{center}\input{figures/factorial}\end{center}
 
-  \note{Inventory +12.70\pp, structure +5.74\pp; both 92.75\% (upper bounds). Chance-matched control (1389 q.): lead +8.4 $\to$ +2.8\pp, inconclusive.}
+  \notepar{Inventory +12.70\pp, structure +5.74\pp; both 92.75\% (upper bounds). Chance-matched control (1389 q.): lead +8.4 $\to$ +2.8\pp, inconclusive.}
 }
 
 \headerbox{\secno{10}Right value, wrong form}{name=form,column=1,below=errhead,above=bottom}{
-  \textbf{161 of 435} strict OOF errors (about a third; approximate) execute to the gold value. Many may reflect the Vietnamese presentation of the data: diacritic labels and \emph{triệu / tỷ} scales.
+  \textbf{161 of 435} strict OOF errors (37\%, approximate) execute to the gold value. Many may reflect the Vietnamese presentation of the data: diacritic labels and \emph{triệu / tỷ} scales.
 
   \begin{center}\input{figures/value-equal}\end{center}
 
-  \note{Picking the gold form among a writer's own samples would reach 77.62\% (from 74.78\%), yet a convention model trained to make that choice changed accuracy by $-$0.17\pp.}
+  \notepar{Picking the gold form among a writer's own samples would reach 77.62\% (from 74.78\%), yet a convention model trained to make that choice changed accuracy by $-$0.17\pp.}
 }
 
 \headerbox{\secno{11}Conclusion}{name=concl,column=2,below=errhead}{
   \begin{compactitem}
-    \item 26 LoRA-tuned 4B writers and a 4B transcriber ranked \textbf{first} under the 8B limit.
-    \item Combining \textbf{writers that differ} beat more passes of one writer.
-    \item A single writer's errors \textbf{begin early}, are \textbf{shared}, and resisted every training remedy.
-    \item Code, adapters and data were shared with the organisers; a vote replay reproduces the submissions exactly; a re-run with retrained adapters differs on 30 of 980.
+    \item 26 LoRA-tuned 4B writers ranked \textbf{first of 9} under the 8B limit.
+    \item \textbf{Writers that differ} beat more passes of one writer.
+    \item Single-writer errors \textbf{begin early}, are \textbf{shared}, and resisted every remedy we tried.
+    \item Code, adapters and data went to the organisers; a vote replay reproduces the submissions exactly (retrained adapters: 30~of~980 differ).
   \end{compactitem}
 }
 
@@ -268,7 +269,6 @@
   \setlength{\parskip}{1.5pt}
   Bai et al.\ 2025. Qwen3-VL technical report. arXiv:2511.21631.\par
   Cameron et al.\ 2008. Bootstrap-based improvements for inference with clustered errors. \mbox{\emph{REStat}}.\par
-  Chen et al.\ 2021. FinQA: a dataset of numerical reasoning over financial data. \emph{EMNLP}.\par
   Hu et al.\ 2022. LoRA: low-rank adaptation of large language models. \emph{ICLR}.\par
   Kwon et al.\ 2023. PagedAttention (vLLM). \emph{SOSP}.\par
   Qwen Team 2026. Qwen3.5: towards native multimodal agents. Model card.\par
